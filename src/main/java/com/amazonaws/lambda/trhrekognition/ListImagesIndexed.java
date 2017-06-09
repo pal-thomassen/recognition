@@ -24,18 +24,19 @@ public class ListImagesIndexed implements RequestHandler<Object, RekognitionResp
         AmazonRekognition rekognition = AmazonRekognitionClientBuilder.standard().build();
         ListFacesResult result = rekognition.listFaces(new ListFacesRequest().withCollectionId("trhrekognition"));
         
-        List<String> keys = result.getFaces().stream()
-		.map(face -> {
-        	return face.getExternalImageId();
-        })
-		.collect(Collectors.toList());  
-        
         StringWriter strWriter = new StringWriter();
         JsonGenerator gen = Json.createGenerator(strWriter);
         gen.writeStartArray();
-        keys.forEach(key -> {
-        	if (key != null) {
-        		gen.write(key);
+        result.getFaces().forEach(face -> {
+        	if (face != null) {
+        		gen.writeStartObject();
+        			String type = "unknown";
+        			if (face.getExternalImageId() != null) {
+        				type = face.getExternalImageId();
+        			}
+        			gen.write("id", type);
+        			gen.write("externalId", face.getFaceId());
+        		gen.writeEnd();
         	}
         });
         gen.writeEnd();

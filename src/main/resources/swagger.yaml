@@ -1,0 +1,182 @@
+---
+swagger: '2.0'
+info:
+  description: Simple API to rekognize images
+  version: 1.0.0
+  title: Trondheim Rekognition
+  contact:
+    email: pal.thomassen@bekk.no
+basePath: /
+tags:
+  - name: faces
+    description: 'Upload, list, and delete faces to be rekognized.'
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+  - name: rekognition
+    description: Upload faces to be rekognized
+schemes:
+  - http
+paths:
+  /faces:
+    post:
+      tags:
+        - faces
+      summary: Add a new face to be rekognized
+      description: ''
+      operationId: addFace
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Pet object that needs to be added to the store
+          required: true
+          schema:
+            $ref: '#/definitions/FaceToRekognize'
+      responses:
+        '200':
+          description: Imagekey for the face to be rekognized.
+          schema:
+            $ref: '#/definitions/FaceToRekognizeResponse'
+        '405':
+          description: Invalid input
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:TrhRekognition/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    get:
+      tags:
+        - faces
+      summary: List all faces we currently rekognize
+      description: ''
+      operationId: listFaces
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: List of faces to rekognize
+          schema:
+            $ref: '#/definitions/ListFacesToRekognize'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:ListFacesIndexed/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    delete:
+      tags:
+      - faces
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:DeleteFaces/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+
+    options:
+      tags:
+        - faces
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+  /rekognize:
+    get:
+      tags:
+        - faces
+      summary: Upload an image and try to rekognize the face
+      description: ''
+      operationId: rekognizeFace
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: List of faces to rekognize
+          schema:
+            $ref: '#/definitions/ListFacesToRekognize'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:RekognizeImage/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+definitions:
+  FaceToRekognize:
+    type: object
+    properties:
+      imageKey:
+        type: string
+        description: >-
+          Key to rekognize the image by. Used to identify which images we
+          rekognize
+      image:
+        type: string
+        description: 'The image with the face to be rekognized, base64 encoded.'
+  FaceToRekognizeResponse:
+    type: object
+    properties:
+      imageKey:
+        type: string
+        description: >-
+          Key to rekognize the image by. Used to identify which images we
+          rekognize
+  ListFacesToRekognize:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+        externalId:
+          type: string
+Externaldocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
