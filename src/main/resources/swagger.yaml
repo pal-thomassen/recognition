@@ -127,7 +127,7 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "mock"
   /rekognize:
-    get:
+    post:
       tags:
         - faces
       summary: Upload an image and try to rekognize the face
