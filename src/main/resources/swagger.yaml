@@ -48,6 +48,7 @@ paths:
           default:
             statusCode: "200"
         uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:TrhRekognition/invocations"
+        credentials: "arn:aws:iam::815899840094:role/service-role/searchFaces"
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -72,6 +73,7 @@ paths:
           default:
             statusCode: "200"
         uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:ListFacesIndexed/invocations"
+        credentials: "arn:aws:iam::815899840094:role/service-role/searchFaces"
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -89,6 +91,7 @@ paths:
           default:
             statusCode: "200"
         uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:DeleteFaces/invocations"
+        credentials: "arn:aws:iam::815899840094:role/service-role/searchFaces"
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
@@ -144,6 +147,7 @@ paths:
           default:
             statusCode: "200"
         uri: "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:815899840094:function:RekognizeImage/invocations"
+        credentials: "arn:aws:iam::815899840094:role/service-role/searchFaces"
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
