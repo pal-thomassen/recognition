@@ -30,12 +30,12 @@ public class ListImagesIndexed implements RequestHandler<Object, RekognitionResp
         result.getFaces().forEach(face -> {
         	if (face != null) {
         		gen.writeStartObject();
-        			String type = "unknown";
+        			String externalId = "unknown";
         			if (face.getExternalImageId() != null) {
-        				type = face.getExternalImageId();
+        				externalId = face.getExternalImageId();
         			}
-        			gen.write("id", type);
-        			gen.write("externalId", face.getFaceId());
+        			gen.write("externalId", externalId);
+        			gen.write("awsId", face.getFaceId());
         		gen.writeEnd();
         	}
         });
