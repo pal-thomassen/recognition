@@ -11,6 +11,7 @@ import javax.json.stream.JsonGenerator;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.lambda.trhrekognition.models.ImageToRekognize;
 import com.amazonaws.lambda.trhrekognition.models.RekognitionRequest;
 import com.amazonaws.lambda.trhrekognition.models.RekognitionResponse;
@@ -35,16 +36,38 @@ public class RekognizeImage implements RequestHandler<RekognitionRequest, Rekogn
         Image image = new Image();
         image.withBytes(ByteBuffer.wrap(Base64.decodeBase64(imageToRekognize.imageBase64Encoded)));
        
-        SearchFacesByImageResult result = rekognition.searchFacesByImage(
-    		new SearchFacesByImageRequest()
-        		.withCollectionId("trhrekognition")
-        		.withImage(image)
-		);
-      
+        RekognitionResponse response = new RekognitionResponse();
         StringWriter strWriter = new StringWriter();
         JsonGenerator gen = Json.createGenerator(strWriter);
-        gen.writeStartObject();
-    	gen.write("num_rekognized", result.getFaceMatches().size());
+        try { 
+	        	SearchFacesByImageResult result = rekognition.searchFacesByImage(
+	        
+		    		new SearchFacesByImageRequest()
+		        		.withCollectionId("trhrekognition")
+		        		.withImage(image)
+			);
+           
+            response.setBody( writeResponse(strWriter, gen, result).toString());
+            return response;
+        } catch (AmazonServiceException ase) {
+        		response.setStatusCode(400 	);
+        		response.setBody(writeError(strWriter, gen, ase.getMessage()));
+        		return response;
+        }
+    }
+    
+    private String writeError(StringWriter strWriter, JsonGenerator gen, String message) {
+    		gen.writeStartObject();
+    			gen.write("error", message);
+    		gen.writeEnd();
+    		gen.flush();
+    		strWriter.flush();
+    		return strWriter.toString();
+    }
+
+	private String writeResponse(StringWriter strWriter, JsonGenerator gen, SearchFacesByImageResult result) {
+		gen.writeStartObject();
+    		gen.write("num_rekognized", result.getFaceMatches().size());
 	        gen.writeStartArray("matches");
 	        result.getFaceMatches().forEach(match -> {
 	        	if (match.getFace().getExternalImageId() != null) {
@@ -58,12 +81,8 @@ public class RekognizeImage implements RequestHandler<RekognitionRequest, Rekogn
         gen.writeEnd();
         gen.flush();
         strWriter.flush();
-        
-        RekognitionResponse response = new RekognitionResponse();
-        response.setBody(strWriter.toString());
-        
-        return response;
-    }
+        return strWriter.toString();
+	}
 
 }
 ;
