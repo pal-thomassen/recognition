@@ -30,7 +30,7 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk</artifactId>
       <version>1.11.123</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
 	    <groupId>javax.json</groupId>
