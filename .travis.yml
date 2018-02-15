@@ -1,1 +1,11 @@
 language: java
+deploy:
+  provider: lambda
+  function_name: lambda-test
+  region: eu-west-1
+  role: arn:aws:iam::815899840094:role/service-role/searchFaces
+  runtime: java8
+  handler_name: com.amazonaws.lambda.trhrekognition.RekognizeImage
+  access_key_id: AKIAI43OOQPS5LO3PE5A
+  secret_access_key:
+    secure: b+M1sYWye2jf/y2nzAsNC0nXGLEyE/XBjgmw2VIXSLujZ7VNFjfW2ruDf2gqIPOP/VQirAsiaLwF4AtXutiDpKTPnROatpKTywhF5g2g345yi7Ruoh/1zoZb8iUPY9/LQ9J0mS0qVL+j6kci2Apst8AlhDUlQhW8NHVz94afggxXo0+N26Y8+kq0WREAvgjG/bPyM/5De+kDPNh8JDhB1UG5ooXTQB4DID6bwyavJDZI0Tz1e4jtZ0MA2chW1bh0bjHq8blRCHG4bh6i0dyQO+7IrUaZV6f7YPRax8kZkZMkPBhKoRFyhpLpvdDu5mZw8LgPWQxSwBm8ZITw+X+0W4j1UESEbJ2qkrLmy1BnI4kCI8oKfb0ZDlDLB2JOrbqoRQWWRF9ChHRJp1JX4pcX02iJJ2YFMRBQVJ16m1mUcWwxL8HJ7GuqClcYRRL6dnVZ2tO8AP2BKG0GYn/QEFIBc/+5ugOrKOVlsLndqO3Bc887xHAKurida5u+wecAoLjvVnRstTw2fTePtCe2Yabo+K+/v5mNmF8NsJlhZ0AiCSAdIo87QvegniHc+TBbVjY9FaT44z7VJasJw7SiGu2V+PJPapAKGMHIaSW81Cy++uRi7Z79ckrwa/y+FZCin+wVqprPZ47V6VNosXA0PbLsFqTR4sEk579aUv+GniwWYaM=
